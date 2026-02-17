@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cipherhub/cli/internal/crypto"
-	"github.com/cipherhub/cli/internal/storage"
-	"github.com/cipherhub/cli/pkg/types"
+	"github.com/imerr0rlog/CipherHub/internal/crypto"
+	"github.com/imerr0rlog/CipherHub/internal/storage"
+	"github.com/imerr0rlog/CipherHub/pkg/types"
 )
 
 var (

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/cipherhub/cli/pkg/types"
+	"github.com/imerr0rlog/CipherHub/pkg/types"
 	"github.com/studio-b12/gowebdav"
 )
 

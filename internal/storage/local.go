@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/cipherhub/cli/pkg/types"
+	"github.com/imerr0rlog/CipherHub/pkg/types"
 )
 
 type LocalStorage struct {

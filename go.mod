@@ -1,4 +1,4 @@
-module github.com/cipherhub/cli
+module github.com/imerr0rlog/CipherHub
 
 go 1.21
 

@@ -20,13 +20,21 @@
 ### 从源码编译
 
 ```bash
-git clone https://github.com/cipherhub/cli.git
-cd cli
-make deps
+# 克隆仓库
+git clone https://github.com/imerr0rlog/CipherHub.git
+cd CipherHub
+
+# 下载依赖
+go mod tidy
+
+# 编译
 make build
+
+# 或直接使用 go build
+go build -o cipherhub ./cmd/cipherhub
 ```
 
-编译后的二进制文件位于 `bin/cipherhub`。
+编译后的二进制文件位于 `bin/cipherhub`（使用 make）或当前目录（使用 go build）。
 
 ### 跨平台编译
 

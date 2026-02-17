@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cipherhub/cli/internal/storage"
-	"github.com/cipherhub/cli/internal/vault"
-	"github.com/cipherhub/cli/pkg/types"
+	"github.com/imerr0rlog/CipherHub/internal/storage"
+	"github.com/imerr0rlog/CipherHub/internal/vault"
+	"github.com/imerr0rlog/CipherHub/pkg/types"
 	"github.com/spf13/cobra"
 )
 
