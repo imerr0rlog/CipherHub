@@ -10,12 +10,13 @@ import (
 )
 
 var (
-	configWebDAVURL      string
-	configWebDAVUser     string
-	configWebDAVPassword string
-	configWebDAVPath     string
-	configSetLocal       bool
-	configShow           bool
+	configWebDAVURL        string
+	configWebDAVUser       string
+	configWebDAVPassword   string
+	configWebDAVPath       string
+	configWebDAVConfigPath string
+	configSetLocal         bool
+	configShow             bool
 )
 
 var configCmd = &cobra.Command{
@@ -49,7 +50,6 @@ or view current settings.`,
 				cfg.WebDAV = &types.WebDAVConfig{}
 			}
 			cfg.WebDAV.URL = configWebDAVURL
-			cfg.DefaultStorage = types.StorageTypeWebDAV
 			changed = true
 			fmt.Printf("✓ WebDAV URL set to %s\n", configWebDAVURL)
 		}
@@ -78,7 +78,16 @@ or view current settings.`,
 			}
 			cfg.WebDAV.RemotePath = configWebDAVPath
 			changed = true
-			fmt.Printf("✓ WebDAV remote path set to %s\n", configWebDAVPath)
+			fmt.Printf("✓ WebDAV vault path set to %s\n", configWebDAVPath)
+		}
+
+		if configWebDAVConfigPath != "" {
+			if cfg.WebDAV == nil {
+				cfg.WebDAV = &types.WebDAVConfig{}
+			}
+			cfg.WebDAV.ConfigRemotePath = configWebDAVConfigPath
+			changed = true
+			fmt.Printf("✓ WebDAV config path set to %s\n", configWebDAVConfigPath)
 		}
 
 		if !changed {
@@ -90,12 +99,13 @@ or view current settings.`,
 			fmt.Println(string(data))
 			fmt.Println()
 			fmt.Println("Use flags to modify configuration:")
-			fmt.Println("  --webdav-url URL       Set WebDAV server URL")
-			fmt.Println("  --webdav-user USER     Set WebDAV username")
-			fmt.Println("  --webdav-pass PASS     Set WebDAV password")
-			fmt.Println("  --webdav-path PATH     Set remote vault path")
-			fmt.Println("  --local                Set local as default storage")
-			fmt.Println("  --show                 Show current configuration")
+			fmt.Println("  --webdav-url URL         Set WebDAV server URL")
+			fmt.Println("  --webdav-user USER       Set WebDAV username")
+			fmt.Println("  --webdav-pass PASS       Set WebDAV password")
+			fmt.Println("  --webdav-path PATH       Set remote vault path")
+			fmt.Println("  --webdav-config-path PATH Set remote config path")
+			fmt.Println("  --local                  Set local as default storage")
+			fmt.Println("  --show                   Show current configuration")
 			return nil
 		}
 
@@ -113,6 +123,7 @@ func init() {
 	configCmd.Flags().StringVar(&configWebDAVUser, "webdav-user", "", "WebDAV username")
 	configCmd.Flags().StringVar(&configWebDAVPassword, "webdav-pass", "", "WebDAV password")
 	configCmd.Flags().StringVar(&configWebDAVPath, "webdav-path", "", "remote vault path on WebDAV")
+	configCmd.Flags().StringVar(&configWebDAVConfigPath, "webdav-config-path", "", "remote config path on WebDAV")
 	configCmd.Flags().BoolVar(&configSetLocal, "local", false, "set local as default storage")
 	configCmd.Flags().BoolVarP(&configShow, "show", "s", false, "show current configuration")
 }

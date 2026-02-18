@@ -148,18 +148,56 @@ cipherhub --vault D:\mydata\vault.json get github
 
 ## WebDAV 云同步
 
+### 同步流程
+
+```
+本地文件                WebDAV 云端
+─────────              ────────────
+vault.json    <--->    /cipherhub/vault.json
+config.json   <--->    /cipherhub/config.json
+```
+
+### 配置步骤
+
 ```bash
-# 配置 WebDAV
+# 1. 初始化本地密码库
+cipherhub init
+
+# 2. 配置 WebDAV 连接信息
 cipherhub config --webdav-url https://webdav.example.com/dav \
                  --webdav-user 用户名 \
                  --webdav-pass 密码 \
-                 --webdav-path /cipherhub/vault.json
+                 --webdav-path /cipherhub/vault.json \
+                 --webdav-config-path /cipherhub/config.json
 
-# 推送到云端
+# 3. 推送到云端（默认同时推送 vault 和 config）
 cipherhub sync
 
-# 从云端拉取
+# 4. 从云端拉取
 cipherhub sync --pull
+cipherhub sync --pull --force  # 跳过确认
+```
+
+### sync 参数
+
+| 参数 | 说明 |
+|------|------|
+| `--pull` | 从云端拉取到本地 |
+| `-f, --force` | 拉取时跳过确认 |
+| `--vault-only` | 仅同步 vault.json |
+| `--config-only` | 仅同步 config.json |
+
+### 单独同步示例
+
+```bash
+# 仅推送 vault
+cipherhub sync --vault-only
+
+# 仅拉取 config
+cipherhub sync --pull --config-only
+
+# 强制覆盖拉取 vault
+cipherhub sync --pull --vault-only --force
 ```
 
 ## 密码生成
@@ -174,8 +212,12 @@ cipherhub generate -l 24
 # 查看配置
 cipherhub config --show
 
-# 切换本地存储
-cipherhub config --local
+# 配置 WebDAV
+cipherhub config --webdav-url https://webdav.example.com/dav
+cipherhub config --webdav-user 用户名
+cipherhub config --webdav-pass 密码
+cipherhub config --webdav-path /cipherhub/vault.json
+cipherhub config --webdav-config-path /cipherhub/config.json
 ```
 
 ## 项目结构
@@ -248,7 +290,8 @@ vault.json       # 密码库
     "url": "https://webdav.example.com/dav",
     "username": "用户名",
     "password": "密码",
-    "remote_path": "/cipherhub/vault.json"
+    "remote_path": "/cipherhub/vault.json",
+    "config_remote_path": "/cipherhub/config.json"
   }
 }
 ```

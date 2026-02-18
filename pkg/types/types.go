@@ -48,8 +48,9 @@ type Config struct {
 type WebDAVConfig struct {
 	URL                string `json:"url" yaml:"url"`
 	Username           string `json:"username" yaml:"username"`
-	Password           string `json:"password" yaml:"password"` // Encrypted
+	Password           string `json:"password" yaml:"password"`
 	RemotePath         string `json:"remote_path" yaml:"remote_path"`
+	ConfigRemotePath   string `json:"config_remote_path,omitempty" yaml:"config_remote_path,omitempty"`
 	InsecureSkipVerify bool   `json:"insecure_skip_verify" yaml:"insecure_skip_verify"`
 }
 
