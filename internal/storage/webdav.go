@@ -18,14 +18,12 @@ func NewWebDAVStorage(cfg *types.WebDAVConfig) *WebDAVStorage {
 	client := gowebdav.NewClient(cfg.URL, cfg.Username, cfg.Password)
 
 	if cfg.InsecureSkipVerify {
-		httpClient := &http.Client{
-			Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true,
-				},
+		transport := &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
 			},
 		}
-		client.SetHttpClient(httpClient)
+		client.SetTransport(transport)
 	}
 
 	return &WebDAVStorage{
