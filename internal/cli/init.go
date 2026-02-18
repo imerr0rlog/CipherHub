@@ -1,13 +1,13 @@
 package cli
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/imerr0rlog/CipherHub/internal/storage"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 )
 
 var initCmd = &cobra.Command{
@@ -65,23 +65,27 @@ as it cannot be recovered.`,
 func promptPassword(prompt string) (string, error) {
 	fmt.Print(prompt)
 
-	reader := bufio.NewReader(os.Stdin)
-	password, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
+	// 尝试使用 term.ReadPassword 隐藏输入（终端模式）
+	if term.IsTerminal(int(os.Stdin.Fd())) {
+		password, err := term.ReadPassword(int(os.Stdin.Fd()))
+		fmt.Println() // ReadPassword 不会输出换行
+		return string(password), err
 	}
 
-	return strings.TrimSpace(password), nil
+	// 非 terminal 模式（如管道输入），回退到普通读取
+	var input string
+	if _, err := fmt.Scanln(&input); err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(input), nil
 }
 
 func promptInput(prompt string) (string, error) {
 	fmt.Print(prompt)
 
-	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
-	if err != nil {
+	var input string
+	if _, err := fmt.Scanln(&input); err != nil {
 		return "", err
 	}
-
 	return strings.TrimSpace(input), nil
 }

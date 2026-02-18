@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -11,7 +12,7 @@ type Entry struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Username  string    `json:"username"`
-	Password  string    `json:"password"`  // AES-256-GCM encrypted, base64 encoded
+	Password  string    `json:"password"` // AES-256-GCM encrypted, base64 encoded
 	URL       string    `json:"url,omitempty"`
 	Notes     string    `json:"notes,omitempty"` // Encrypted, base64 encoded
 	CreatedAt time.Time `json:"created_at"`
@@ -95,11 +96,19 @@ func SecureRandomString(length int) string {
 	return string(b)
 }
 
+func getExeDir() string {
+	exePath, err := os.Executable()
+	if err != nil {
+		return "."
+	}
+	return filepath.Dir(exePath)
+}
+
 func DefaultConfig() *Config {
-	homeDir, _ := os.UserHomeDir()
+	exeDir := getExeDir()
 	return &Config{
 		DefaultStorage:   StorageTypeLocal,
-		VaultPath:        homeDir + "/.cipherhub/vault.json",
+		VaultPath:        filepath.Join(exeDir, "vault.json"),
 		AutoSync:         false,
 		ClipboardTimeout: 30,
 	}

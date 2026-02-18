@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	cfg     *types.Config
-	cfgPath string
-	vaultMgr *vault.Manager
+	cfg            *types.Config
+	cfgPath        string
+	vaultMgr       *vault.Manager
+	flagConfigPath string
+	flagVaultPath  string
 )
 
 var rootCmd = &cobra.Command{
@@ -26,9 +28,12 @@ All passwords are encrypted using AES-256-GCM with keys derived from
 your master password using Argon2id.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		var err error
-		cfg, cfgPath, err = storage.LoadOrCreateConfig()
+		cfg, cfgPath, err = storage.LoadOrCreateConfigWithPath(flagConfigPath)
 		if err != nil {
 			return fmt.Errorf("failed to load config: %w", err)
+		}
+		if flagVaultPath != "" {
+			cfg.VaultPath = flagVaultPath
 		}
 		return nil
 	},
@@ -42,6 +47,9 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.PersistentFlags().StringVar(&flagConfigPath, "config", "", "config file path (default: ./config.json)")
+	rootCmd.PersistentFlags().StringVar(&flagVaultPath, "vault", "", "vault file path (default: ./vault.json)")
+
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(getCmd)

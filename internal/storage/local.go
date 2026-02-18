@@ -91,11 +91,12 @@ func SaveConfig(path string, cfg *types.Config) error {
 }
 
 func GetConfigPath() (string, error) {
-	homeDir, err := os.UserHomeDir()
+	exePath, err := os.Executable()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(homeDir, ".cipherhub", "config.json"), nil
+	exeDir := filepath.Dir(exePath)
+	return filepath.Join(exeDir, "config.json"), nil
 }
 
 func LoadOrCreateConfig() (*types.Config, string, error) {
@@ -108,6 +109,31 @@ func LoadOrCreateConfig() (*types.Config, string, error) {
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			cfg = types.DefaultConfig()
+			return cfg, configPath, nil
+		}
+		return nil, "", err
+	}
+
+	return cfg, configPath, nil
+}
+
+func LoadOrCreateConfigWithPath(customPath string) (*types.Config, string, error) {
+	configPath := customPath
+	if configPath == "" {
+		var err error
+		configPath, err = GetConfigPath()
+		if err != nil {
+			return nil, "", err
+		}
+	}
+
+	cfg, err := LoadConfig(configPath)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			cfg = types.DefaultConfig()
+			if customPath != "" {
+				cfg.VaultPath = filepath.Join(filepath.Dir(customPath), "vault.json")
+			}
 			return cfg, configPath, nil
 		}
 		return nil, "", err
