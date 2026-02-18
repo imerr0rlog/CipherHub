@@ -9,6 +9,7 @@ bin/
 go.work
 .idea/
 .vscode/
+.trae/
 *.swp
 *.swo
 *~

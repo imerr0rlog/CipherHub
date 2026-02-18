@@ -1,3 +1,7 @@
+// Package cli 提供 CipherHub 的命令行界面实现
+//
+// 该包包含所有命令行命令的定义和实现，包括初始化密码库、添加/获取/删除条目、
+// 配置管理、同步等功能。
 package cli
 
 import (
@@ -39,6 +43,10 @@ your master password using Argon2id.`,
 	},
 }
 
+// Execute 运行 CipherHub 命令行应用程序
+//
+// 该函数解析命令行参数并执行相应的命令。如果执行过程中发生错误，
+// 会将错误信息输出到标准错误流并以状态码 1 退出程序。
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
