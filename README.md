@@ -238,6 +238,105 @@ CipherHub/
 └── README.md
 ```
 
+## 公共 API
+
+CipherHub 提供 `pkg/api` 包供外部程序集成使用。
+
+### 快速开始
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/imerr0rlog/CipherHub/pkg/api"
+)
+
+func main() {
+    // 创建客户端
+    client, err := api.NewClientWithOptions(&api.ClientOptions{
+        VaultPath:  "./mydata/vault.json",
+        ConfigPath: "./mydata/config.json",
+    })
+    if err != nil {
+        panic(err)
+    }
+
+    // 初始化密码库
+    if err := client.InitVault("master-password"); err != nil {
+        panic(err)
+    }
+
+    // 添加条目
+    entry, err := client.AddEntry("github", "user", "pass", "https://github.com", "", nil)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("Added: %s\n", entry.Name)
+
+    // 获取解密后的密码
+    password, _ := client.GetDecryptedPassword("github")
+    fmt.Printf("Password: %s\n", password)
+}
+```
+
+### API 参考
+
+| 方法 | 说明 |
+|------|------|
+| **客户端管理** | |
+| `NewClient(cfg)` | 使用配置创建客户端 |
+| `NewClientWithOptions(opts)` | 使用选项创建客户端 |
+| `LoadConfig(path)` | 加载配置文件 |
+| `SaveConfig(path, cfg)` | 保存配置文件 |
+| `DefaultConfig()` | 获取默认配置 |
+| **密码库操作** | |
+| `InitVault(password)` | 初始化密码库 |
+| `OpenVault(password)` | 打开密码库 |
+| `CloseVault()` | 关闭密码库 |
+| `IsVaultOpen()` | 检查密码库是否打开 |
+| `VaultExists()` | 检查密码库是否存在 |
+| **条目管理** | |
+| `AddEntry(...)` | 添加条目 |
+| `GetEntry(name)` | 获取条目 |
+| `GetDecryptedPassword(name)` | 获取解密密码 |
+| `GetDecryptedNotes(name)` | 获取解密备注 |
+| `ListEntries()` | 列出所有条目 |
+| `SearchEntries(query)` | 搜索条目 |
+| `UpdateEntry(name, updates)` | 更新条目 |
+| `DeleteEntry(name)` | 删除条目 |
+| **WebDAV 同步** | |
+| `SyncToWebDAV(opts)` | 推送到 WebDAV |
+| `PullFromWebDAV(opts)` | 从 WebDAV 拉取 |
+| **工具函数** | |
+| `GeneratePassword(length)` | 生成随机密码 |
+| `Encrypt(password, salt, plaintext)` | 加密字符串 |
+| `Decrypt(password, salt, ciphertext)` | 解密字符串 |
+| `GenerateSalt()` | 生成盐值 |
+
+### WebDAV 同步示例
+
+```go
+// 配置 WebDAV
+cfg := client.Config()
+cfg.WebDAV = &types.WebDAVConfig{
+    URL:              "https://webdav.example.com/dav",
+    Username:         "user",
+    Password:         "pass",
+    RemotePath:       "/cipherhub/vault.json",
+    ConfigRemotePath: "/cipherhub/config.json",
+}
+
+// 推送 vault 和 config
+client.SyncToWebDAV(nil)
+
+// 仅推送 vault
+client.SyncToWebDAV(&api.SyncOptions{SyncVault: true})
+
+// 拉取
+client.PullFromWebDAV(nil)
+```
+
 ## 安全机制
 
 | 机制 | 实现 |
