@@ -85,7 +85,19 @@ cipherhub list
 cipherhub list -s github
 ```
 
-### 5. 删除条目
+### 5. 更新密码条目
+
+```bash
+cipherhub update github
+```
+
+或直接指定参数：
+
+```bash
+cipherhub update github -u newuser -p newpass -U https://new.github.com
+```
+
+### 6. 删除条目
 
 ```bash
 cipherhub delete github
@@ -128,6 +140,7 @@ GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o cipherhub-darwin-arm64 ./c
 | `init` | 初始化密码库 |
 | `add <名称>` | 添加密码条目 |
 | `get <名称>` | 获取密码条目 |
+| `update <名称>` | 更新密码条目 |
 | `list` | 列出所有条目 |
 | `delete <名称>` | 删除条目 |
 | `config` | 管理配置 |
@@ -177,6 +190,15 @@ cipherhub --vault D:\mydata\vault.json get github
 -p, --password   显示密码明文
 -n, --notes      显示备注
 -c, --copy       复制密码到剪贴板
+```
+
+#### update 参数
+
+```
+-u, --username   新用户名
+-p, --password   新密码（留空保持现有密码）
+-U, --url        新 URL
+-n, --notes      新备注
 ```
 
 #### list 参数
@@ -247,8 +269,8 @@ cipherhub sync --pull --force  # 跳过确认
 |------|------|
 | `--pull` | 从云端拉取到本地 |
 | `-f, --force` | 拉取时跳过确认 |
-| `--vault-only` | 仅同步 vault.json |
-| `--config-only` | 仅同步 config.json |
+| `--vault-only` | 仅同步 vault.json 文件 |
+| `--config-only` | 仅同步 config.json 文件 |
 
 #### 单独同步示例
 

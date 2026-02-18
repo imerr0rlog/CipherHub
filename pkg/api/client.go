@@ -430,7 +430,7 @@ func Decrypt(masterPassword string, salt []byte, ciphertext string) (string, err
 
 // GenerateSalt 生成一个随机盐值。
 //
-// 返回生成的随机盐值字节数组。
-func GenerateSalt() []byte {
+// 返回生成的随机盐值字节数组，或者在生成失败时返回错误。
+func GenerateSalt() ([]byte, error) {
 	return crypto.GenerateSalt()
 }

@@ -61,6 +61,7 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(getCmd)
+	rootCmd.AddCommand(updateCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(configCmd)
@@ -70,27 +71,18 @@ func init() {
 }
 
 func getVaultManager() (*vault.Manager, error) {
-	if vaultMgr != nil && vaultMgr.IsOpen() {
-		return vaultMgr, nil
-	}
-
 	st, err := storage.NewStorage(cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	vaultMgr = vault.NewManager(st)
-	return vaultMgr, nil
+	return vault.NewManager(st), nil
 }
 
 func openVault(masterPassword string) (*vault.Manager, error) {
 	mgr, err := getVaultManager()
 	if err != nil {
 		return nil, err
-	}
-
-	if mgr.IsOpen() {
-		return mgr, nil
 	}
 
 	if err := mgr.Open(masterPassword); err != nil {

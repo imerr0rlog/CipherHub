@@ -227,6 +227,6 @@ func pullConfig() error {
 func init() {
 	syncCmd.Flags().BoolVar(&syncPull, "pull", false, "pull from remote to local")
 	syncCmd.Flags().BoolVarP(&syncForce, "force", "f", false, "force overwrite without confirmation")
-	syncCmd.Flags().BoolVar(&syncVaultOnly, "vault-only", false, "sync vault only")
-	syncCmd.Flags().BoolVar(&syncConfigOnly, "config-only", false, "sync config only")
+	syncCmd.Flags().BoolVar(&syncVaultOnly, "vault-only", false, "sync only vault.json file")
+	syncCmd.Flags().BoolVar(&syncConfigOnly, "config-only", false, "sync only config.json file")
 }

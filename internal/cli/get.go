@@ -87,7 +87,7 @@ Use --password to display the password, or --copy to copy it to clipboard.`,
 }
 
 func init() {
-	getCmd.Flags().BoolVarP(&getShowPassword, "password", "p", false, "show the password")
+	getCmd.Flags().BoolVarP(&getShowPassword, "password", "p", false, "show password in plain text")
 	getCmd.Flags().BoolVarP(&getShowNotes, "notes", "n", false, "show the notes")
 	getCmd.Flags().BoolVarP(&getCopy, "copy", "c", false, "copy password to clipboard")
 }
